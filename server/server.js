@@ -14,8 +14,6 @@ const { generateMessage } = require('./utils/message');
 
 app.use(express.static(publicPath));
 
-// const timeStamp = new Date().getTime();
-
 io.on('connection', (socket) => {
   console.log('New user connected.');
 
@@ -23,14 +21,10 @@ io.on('connection', (socket) => {
 
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'A new user joing the chat app'));
 
-  socket.on('createMessage', (message) => {
+  socket.on('createMessage', (message, callback) => {
     console.log('create message', message);
     io.emit('newMessage', generateMessage(message.from, message.text));
-    // socket.broadcast.emit('newMessage', {
-    //   from: message.from,
-    //   text: message.text,
-    //   createdAt: new Date().getTime()
-    // });
+    callback('This is from the server');
   });
 
   socket.on('disconnect', () => {
